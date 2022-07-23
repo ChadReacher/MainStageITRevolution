@@ -30,10 +30,10 @@ public class MainController {
     }
 
     @PostMapping("trees")
-    public Tree createNewTree(Tree tree, @RequestParam("image") MultipartFile file) throws IOException {
-        String encodedImageString = Base64.getMimeEncoder().encodeToString(file.getBytes());
-        Image image = new Image(encodedImageString);
+    public Tree createNewTree(Tree tree) throws IOException {
+        Image image = new Image(tree.getImage().getImageData());
         imageService.save(image);
+        tree.setImage(image);
         treeService.save(tree);
         return tree;
     }
