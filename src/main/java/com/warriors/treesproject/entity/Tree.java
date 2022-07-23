@@ -18,11 +18,7 @@ public class Tree {
     @OneToOne
     @JoinColumn(name = "image_id")
     private Image image;
-    @ManyToMany
-    @JoinTable(name = "tree_work_types",
-            joinColumns = {@JoinColumn(name = "registered_number")},
-            inverseJoinColumns = {@JoinColumn(name = "tree_work_type_id")})
-    private Set<TreeWorkType> workTypes;
+    private String workType;
 
     private Double Latitude;
     private Double Longitude;
@@ -30,25 +26,26 @@ public class Tree {
     public Tree() {}
 
     public Tree(Double crownRadius, Integer age, String type, String condition,
-                Image image, Set<TreeWorkType> workTypes, Double latitude, Double longitude) {
+                Image image, String workType, Double latitude, Double longitude) {
         this.crownRadius = crownRadius;
         this.age = age;
         this.type = type;
         this.condition = condition;
         this.image = image;
-        this.workTypes = workTypes;
+        this.workType = workType;
         Latitude = latitude;
         Longitude = longitude;
     }
 
-    public Tree(Long registeredNumber, Double crownRadius, Integer age, String type, String condition, Image image, Set<TreeWorkType> workTypes, Double latitude, Double longitude) {
+    public Tree(Long registeredNumber, Double crownRadius, Integer age, String type,
+                String condition, Image image, String workType, Double latitude, Double longitude) {
         this.registeredNumber = registeredNumber;
         this.crownRadius = crownRadius;
         this.age = age;
         this.type = type;
         this.condition = condition;
         this.image = image;
-        this.workTypes = workTypes;
+        this.workType = workType;
         Latitude = latitude;
         Longitude = longitude;
     }
@@ -101,12 +98,12 @@ public class Tree {
         this.image = image;
     }
 
-    public Set<TreeWorkType> getWorkTypes() {
-        return workTypes;
+    public String getWorkType() {
+        return workType;
     }
 
-    public void setWorkTypes(Set<TreeWorkType> workTypes) {
-        this.workTypes = workTypes;
+    public void setWorkType(String workType) {
+        this.workType = workType;
     }
 
     public Double getLatitude() {
@@ -133,7 +130,7 @@ public class Tree {
                 ", age=" + age +
                 ", type='" + type + '\'' +
                 ", condition='" + condition + '\'' +
-                ", treeWorkType=" + workTypes +
+                ", workType=" + workType +
                 '}';
     }
 }

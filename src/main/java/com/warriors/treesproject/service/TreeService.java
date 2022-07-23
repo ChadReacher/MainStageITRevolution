@@ -41,7 +41,7 @@ public class TreeService {
         treeToUpdate.setCrownRadius(updatedTree.getCrownRadius());
         treeToUpdate.setType(updatedTree.getType());
         treeToUpdate.setImage(updatedTree.getImage());
-        treeToUpdate.setWorkTypes(updatedTree.getWorkTypes());
+        treeToUpdate.setWorkType(updatedTree.getWorkType());
         treeRepository.save(treeToUpdate);
     }
 
