@@ -82,3 +82,10 @@ input[type="file"] {
     margin-bottom: 20px;
     padding: 5px;
 }
+
+.chosen_image {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    margin-left: 10px;
+}

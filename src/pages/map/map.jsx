@@ -1,9 +1,9 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 // Maps
 import { MapContainer, TileLayer, Marker, useMapEvent } from 'react-leaflet'
 import L from 'leaflet'
 // Components
-import { Modal } from '../../components'
+import { Modal, Loader } from '../../components'
 import { ModalInfo } from './components'
 // Styles
 import './map.css'
@@ -12,46 +12,67 @@ import { Button } from '@mui/material';
 import { useForm } from "react-hook-form";
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as Yup from "yup";
+// Store
+import {
+  useDispatch,
+  useSelector
+} from 'react-redux';
+import {
+  selectLoading,
+  fetchAllTrees,
+  getBaseImage,
+  selectBaseImage,
+  selectAllTrees
+} from '../../store/map';
 
+
+const schema = Yup.object({
+  name: Yup.string().required(),
+  age: Yup.string().required(),
+  condition: Yup.string().required(),
+  image: Yup.string().required(),
+  needs: Yup.string(),
+}).required();
 
 const Map = () => {
-  const schema = Yup.object({
-    name: Yup.string().required(),
-    age: Yup.string().required(),
-    status: Yup.string().required(),
-    file: Yup.string().required(),
-    needs: Yup.string(),
-  }).required();
-  
+
   const [isModalInfoOpen, setModalInfoOpen] = useState(false);
   const [isAddTreeModalOpen, setAddTreeModalOpen] = useState(false);
+  const [treeLocation, setTreeLocation] = useState(null);
+  const [singleTree, setSingleTree] = useState(null);
 
-  const { register, handleSubmit, formState: { errors, isValid, isDirty } } = useForm({
+  const isLoading = useSelector(selectLoading)
+  const baseImage = useSelector(selectBaseImage)
+  const trees = useSelector(selectAllTrees)
+
+  const dispatch = useDispatch()
+
+  useEffect(() => {
+    dispatch(fetchAllTrees())
+  }, [])
+
+  // Form
+
+  const { register, handleSubmit, formState: { isValid, isDirty } } = useForm({
     resolver: yupResolver(schema),
     mode: "onChange"
   });
 
   const onSubmit = (data, e) => {
     e.preventDefault();
-    console.log(data.file)
+    setAddTreeModalOpen(false)
+    console.log({ ...data, ...treeLocation, image: baseImage })
   }
 
+
   const handleFileChange = (e) => {
-    const img = {
-      preview: URL.createObjectURL(e.target.files[0]),
-      data: e.target.files[0],
-    }
-    console.log(img)
+    dispatch(getBaseImage(e.target.files[0]));
   }
 
   // Maps handlers
-  const icon = L.icon({
-    iconUrl: 'https://www.sciencenewsforstudents.org/wp-content/uploads/2020/04/1030_LL_trees-1028x579.png',
-    iconSize: [60, 60],
-    className: 'marker'
-  })
 
-  const onClick = () => {
+  const onMarkClick = (id) => {
+    setSingleTree(trees.find(item => item.registeredNumber === id))
     setModalInfoOpen(true)
   }
 
@@ -59,11 +80,15 @@ const Map = () => {
     useMapEvent({
       click(e) {
         setAddTreeModalOpen(true)
-        console.log(e.latlng);
+        setTreeLocation(e.latlng);
       },
     });
     return null;
   };
+
+  if (isLoading) {
+    return <Loader />
+  }
 
   // View
 
@@ -73,7 +98,7 @@ const Map = () => {
       <div className="container-map">
 
         <MapContainer
-          zoom={12}
+          zoom={13}
           center={[49.23768441174952, 28.469507670557647]}
           style={{ width: "100%", height: "80vh" }}
           scrollWheelZoom={false}
@@ -83,10 +108,22 @@ const Map = () => {
             attribution='&amp;copy <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
             url="https://{s}.tile.osm.org/{z}/{x}/{y}.png"
           />
+          {trees?.map(item => {
+            return <Marker
+              position={[item.latitude, item.longitude]}
+              icon={L.icon({
+                iconUrl: `data:image/jpeg;base64,${item.image.imageData}`,
+                iconSize: [item.crownRadius * 3, item.crownRadius * 3],
+                className: 'marker'
+              })}
+              eventHandlers={{
+                click: () => onMarkClick(item.registeredNumber),
+              }}
+              key={item.registeredNumber}
+            />
+          })
+          }
 
-          <Marker position={[49.23768441174952, 28.469507670557647]} icon={icon} eventHandlers={{
-            click: onClick,
-          }} />
           <LocationFinder />
         </MapContainer>
       </div>
@@ -94,11 +131,11 @@ const Map = () => {
       <ModalInfo
         isOpen={isModalInfoOpen}
         handleClose={() => setModalInfoOpen(false)}
-        image={`data:image/jpeg;base64,${''}`}
-        name={'Maple'}
-        age={20}
-        status={'Safe'}
-        neededWork={'No needs'}
+        image={`data:image/jpeg;base64,${singleTree?.image?.imageData}`}
+        name={singleTree?.type}
+        age={singleTree?.age}
+        status={singleTree?.condition}
+        neededWork={'singleTree'}
       />
 
       <Modal isOpen={isAddTreeModalOpen} handleClose={() => setAddTreeModalOpen(false)}>
@@ -108,13 +145,16 @@ const Map = () => {
           <p className="tree-title">Age</p>
           <input type="text" placeholder='Input tree age' className='form_input' {...register("age")} />
           <p className="tree-title">Status</p>
-          <input type="text" placeholder='Input tree status' className='form_input' {...register("status")} />
+          <input type="text" placeholder='Input tree status' className='form_input' {...register("condition")} />
           <p className="tree-title">Needed work</p>
           <input type="text" placeholder='Input tree needs' className='form_input' {...register("needs")} />
-          <label className="tree-title file" for="inputTag">Select Image
-            <input type="file" id="inputTag" placeholder='Input tree need' className='form_input' {...register("file")} onChange={handleFileChange}/>
-          </label>
-          <Button variant="contained" color="success" type="submit" sx={{ marginTop: 2 }}  disabled={!isDirty || !isValid}>Set tree</Button>
+          <div className="row">
+            <label className="tree-title file" for="inputTag">Select Image
+              <input type="file" id="inputTag" placeholder='Input tree need' className='form_input' {...register("image")} onChange={handleFileChange} />
+            </label>
+            {baseImage ? <img src={`data:image/jpeg;base64,${baseImage}`} alt="chosen_image" className='chosen_image' /> : null}
+          </div>
+          <Button variant="contained" color="success" type="submit" sx={{ marginTop: 2 }} disabled={!isDirty || !isValid}>Set tree</Button>
         </form>
       </Modal>
     </div>
