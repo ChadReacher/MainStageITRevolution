@@ -1,0 +1,16 @@
+.nav-link {
+  text-decoration: none;  
+  color: #ffffff;
+}
+
+.nav-link:active {
+    text-decoration: none;  
+    color: #ffffff;
+}
+
+.flex-inline {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+}

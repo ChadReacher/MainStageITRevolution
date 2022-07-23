@@ -1,0 +1,47 @@
+.container-map {
+  width: 700px;
+  height: 500px;
+  z-index: 1;
+}
+.container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 90vh;
+    background-position: center; /* Center the image */
+    background-repeat: no-repeat; /* Do not repeat the image */
+    background-size: cover;
+    background-image: url('https://wallpaperaccess.com/full/427852.jpg');
+}
+
+.marker  {
+    border-radius: 50%;
+    border:  1px solid green;
+}
+
+.row  {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    color: #08270E;
+    margin-bottom: 20px;
+}
+
+.tree-title {
+    font-size: 18px;
+    font-weight: 18px;
+    font-family: 'Lexend', sans-serif;
+}
+
+.avatar-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+} 
+
+.avatar-tree {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+}
