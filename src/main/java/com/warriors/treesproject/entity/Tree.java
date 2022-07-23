@@ -93,7 +93,6 @@ public class Tree {
         this.condition = condition;
     }
 
-    @JsonIgnore
     public Image getImage() {
         return image;
     }
