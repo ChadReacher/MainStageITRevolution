@@ -3,21 +3,21 @@
   <groupId>com.warriors</groupId>
   <artifactId>trees-project</artifactId>
   <versioning>
-    <lastUpdated>20220723123028</lastUpdated>
+    <lastUpdated>20220723142624</lastUpdated>
     <snapshot>
-      <timestamp>20220723.123028</timestamp>
+      <timestamp>20220723.142624</timestamp>
       <buildNumber>1</buildNumber>
     </snapshot>
     <snapshotVersions>
       <snapshotVersion>
         <extension>jar</extension>
-        <value>0.0.1-20220723.123028-1</value>
-        <updated>20220723123028</updated>
+        <value>0.0.1-20220723.142624-1</value>
+        <updated>20220723142624</updated>
       </snapshotVersion>
       <snapshotVersion>
         <extension>pom</extension>
-        <value>0.0.1-20220723.123028-1</value>
-        <updated>20220723123028</updated>
+        <value>0.0.1-20220723.142624-1</value>
+        <updated>20220723142624</updated>
       </snapshotVersion>
     </snapshotVersions>
   </versioning>
