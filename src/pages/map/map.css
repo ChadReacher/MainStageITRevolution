@@ -45,3 +45,40 @@
     height: 60px;
     border-radius: 50%;
 }
+
+.form_container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.form_input {
+    height: 30px;
+    border-radius: 10px;
+    outline: none;
+   border: none;
+   padding: 8px;
+   font-size: 18px;
+    font-weight: 18px;
+    font-family: 'Lexend', sans-serif;
+    color: #08270E;
+
+}
+
+.form_input:focus {
+   outline: none;
+   border: none;
+}
+
+input[type="file"] {
+    display: none;
+}
+
+.tree-title.file {
+    border-radius: 10px;
+    border: 1px solid #08270E;
+    cursor: pointer;
+    margin-top: 20px;
+    margin-bottom: 20px;
+    padding: 5px;
+}

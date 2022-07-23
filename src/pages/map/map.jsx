@@ -1,14 +1,48 @@
 import React, { useState } from 'react'
-// Components
-import { MapContainer, TileLayer, Marker, Popup, useMapEvent } from 'react-leaflet'
+// Maps
+import { MapContainer, TileLayer, Marker, useMapEvent } from 'react-leaflet'
 import L from 'leaflet'
+// Components
 import { Modal } from '../../components'
+import { ModalInfo } from './components'
 // Styles
 import './map.css'
+import { Button } from '@mui/material';
+// Hooks
+import { useForm } from "react-hook-form";
+import { yupResolver } from '@hookform/resolvers/yup';
+import * as Yup from "yup";
+
 
 const Map = () => {
+  const schema = Yup.object({
+    name: Yup.string().required(),
+    age: Yup.string().required(),
+    status: Yup.string().required(),
+    file: Yup.string().required(),
+    needs: Yup.string(),
+  }).required();
+  
   const [isModalInfoOpen, setModalInfoOpen] = useState(false);
+  const [isAddTreeModalOpen, setAddTreeModalOpen] = useState(false);
 
+  const { register, handleSubmit, formState: { errors, isValid, isDirty } } = useForm({
+    resolver: yupResolver(schema),
+    mode: "onChange"
+  });
+
+  const onSubmit = (data, e) => {
+    e.preventDefault();
+    console.log(data.file)
+  }
+
+  const handleFileChange = (e) => {
+    const img = {
+      preview: URL.createObjectURL(e.target.files[0]),
+      data: e.target.files[0],
+    }
+    console.log(img)
+  }
 
   // Maps handlers
   const icon = L.icon({
@@ -24,6 +58,7 @@ const Map = () => {
   const LocationFinder = () => {
     useMapEvent({
       click(e) {
+        setAddTreeModalOpen(true)
         console.log(e.latlng);
       },
     });
@@ -56,26 +91,31 @@ const Map = () => {
         </MapContainer>
       </div>
 
-      <Modal isOpen={isModalInfoOpen} handleClose={() => setModalInfoOpen(false)}>
-        <div className="avatar-container">
-          <img src="https://www.sciencenewsforstudents.org/wp-content/uploads/2020/04/1030_LL_trees-1028x579.png" alt="tree" className='avatar-tree'/>
-        </div>
-         <div className='row'>
+      <ModalInfo
+        isOpen={isModalInfoOpen}
+        handleClose={() => setModalInfoOpen(false)}
+        image={`data:image/jpeg;base64,${''}`}
+        name={'Maple'}
+        age={20}
+        status={'Safe'}
+        neededWork={'No needs'}
+      />
+
+      <Modal isOpen={isAddTreeModalOpen} handleClose={() => setAddTreeModalOpen(false)}>
+        <form className='form_container' onSubmit={handleSubmit(onSubmit)}>
           <p className="tree-title">Name</p>
-          <p className="tree-title">Maple</p>
-          </div>
-         <div className='row'>
+          <input type="text" placeholder='Input tree name' className='form_input' {...register("name")} />
           <p className="tree-title">Age</p>
-          <p className="tree-title">20</p>
-          </div>
-         <div className='row'>
+          <input type="text" placeholder='Input tree age' className='form_input' {...register("age")} />
           <p className="tree-title">Status</p>
-          <p className="tree-title">Safe</p>
-          </div>
-         <div className='row'>
-          <p className="tree-title">Need work</p>
-          <p className="tree-title">No needs</p>
-          </div>
+          <input type="text" placeholder='Input tree status' className='form_input' {...register("status")} />
+          <p className="tree-title">Needed work</p>
+          <input type="text" placeholder='Input tree needs' className='form_input' {...register("needs")} />
+          <label className="tree-title file" for="inputTag">Select Image
+            <input type="file" id="inputTag" placeholder='Input tree need' className='form_input' {...register("file")} onChange={handleFileChange}/>
+          </label>
+          <Button variant="contained" color="success" type="submit" sx={{ marginTop: 2 }}  disabled={!isDirty || !isValid}>Set tree</Button>
+        </form>
       </Modal>
     </div>
   )
