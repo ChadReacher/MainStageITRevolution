@@ -2,14 +2,11 @@ package com.warriors.treesproject.controller;
 
 import com.warriors.treesproject.entity.Image;
 import com.warriors.treesproject.entity.Tree;
-import com.warriors.treesproject.entity.TreeWorkType;
 import com.warriors.treesproject.service.ImageService;
 import com.warriors.treesproject.service.TreeService;
 import com.warriors.treesproject.service.TreeWorkTypeService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -32,11 +29,6 @@ public class MainController {
         this.treeService = treeService;
     }
 
-    @GetMapping("trees")
-    public List<Tree> getAllTrees(Model model) {
-        return treeService.getAllTrees();
-    }
-
     @PostMapping("trees")
     public Tree createNewTree(Tree tree, @RequestParam("image") MultipartFile file) throws IOException {
         String encodedImageString = Base64.getMimeEncoder().encodeToString(file.getBytes());
@@ -49,6 +41,26 @@ public class MainController {
     @PostMapping("/trees/{id}/delete")
     public void deleteTree(@PathVariable("id") Long id) {
         treeService.delete(id);
+    }
+
+    @GetMapping("trees")
+    public List<Tree> getSortedTree(@RequestParam(defaultValue = "all", required = false, name = "sort") String sort) {
+        List<Tree> sortedTrees = new ArrayList<>();
+        switch(sort) {
+            case "all":
+                sortedTrees = treeService.getAllTrees();
+                break;
+            case "work":
+                sortedTrees = treeService.getTreesSortedByWork();
+                break;
+            case "healthy":
+                sortedTrees = treeService.getHealthyTrees();
+                break;
+            case "removal":
+                sortedTrees = treeService.getTreesThatNeedRemoval();
+                break;
+        }
+        return sortedTrees;
     }
 
 }

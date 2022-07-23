@@ -55,4 +55,16 @@ public class TreeService {
     public void delete(Tree tree) {
         treeRepository.delete(tree);
     }
+
+    public List<Tree> getTreesSortedByWork() {
+        return treeRepository.findByWorkTypes();
+    }
+
+    public List<Tree> getHealthyTrees() {
+        return treeRepository.findByTypeHealthy();
+    }
+
+    public List<Tree> getTreesThatNeedRemoval() {
+        return treeRepository.findByTypeRemoval();
+    }
 }
