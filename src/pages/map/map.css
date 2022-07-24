@@ -30,7 +30,8 @@
 
 .tree-title {
     font-size: 18px;
-    font-weight: 18px;
+    font-weight: 600;
+    color: #08270E;
     font-family: 'Lexend', sans-serif;
     margin: 5px 0 5px;
 }
@@ -97,3 +98,17 @@ input[type="file"] {
     align-items: center;
     justify-content: center;
 }
+
+
+::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+::-webkit-scrollbar-track {
+    background-color: rgba(255, 255, 255, 0.1);
+    border-radius: 10px;
+  }
+::-webkit-scrollbar-thumb {
+    background-color: #6bc003;
+    border-radius: 10px;
+  }

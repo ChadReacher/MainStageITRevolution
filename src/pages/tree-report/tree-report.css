@@ -1,0 +1,67 @@
+body {
+    font-weight: bolder;
+}
+
+.right-bar {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-position: center; /* Center the image */
+    background-repeat: no-repeat; /* Do not repeat the image */
+    background-size: cover;
+    background-image: url('https://wallpapercave.com/wp/wp2555019.jpg');
+    background-attachment: fixed;
+}
+
+.header {
+    height: 60px;
+    border-radius: 10px;
+    margin-top: 20px;
+    width: 380px;
+    background: rgb(194,255,0);
+    background: linear-gradient(90deg, rgba(194,255,0,1) 6%, rgba(116,219,30,1) 46%, rgba(9,191,48,1) 92%);
+}
+
+
+.list__item {
+    display: flex;
+    justify-content: space-between;
+    width: 480px;
+    margin-top: 1.5px;
+    background: rgb(194,255,0);
+    background: linear-gradient(90deg, rgba(194,255,0,1) 6%, rgba(116,219,30,1) 46%, rgba(9,191,48,1) 92%);
+    border-radius: 13px;
+    padding: 10px;
+    padding-right: 6px;
+}
+
+.list:last-child {
+    margin-bottom: 30px;
+}
+
+.photo__tree {
+    width: 100px;
+    height: 100px;
+    border-radius: 10px;
+}
+
+.info__item {
+    width: 300px;
+    padding: 5px 10px;
+    margin-top: 5px;
+    border: 2px solid black;
+    background-color: rgb(93, 181, 108);
+    border-radius: 13px;
+    font-family: 'Lexend', sans-serif;
+    display: flex;
+    justify-content: space-between;
+}
+
+.tree_section-list-title {
+    text-align: center;
+    font-size: 22px;
+    font-weight: 600;
+    color: #08270E;
+    font-family: 'Lexend', sans-serif;
+}
+
