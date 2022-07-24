@@ -2,7 +2,7 @@ import React from 'react'
 import { Button } from '@mui/material'
 import { Modal } from '../../../../components'
 
-const InfoModal = ({ isOpen, handleClose, name, age, status, neededWork, image, crownRadius, onDelete }) => {
+const InfoModal = ({ isOpen, handleClose, name, age, status, neededWork, image, crownRadius, onDelete, isAuth }) => {
     return (
         <Modal isOpen={isOpen} handleClose={handleClose}>
             <div className="avatar-container">
@@ -28,9 +28,10 @@ const InfoModal = ({ isOpen, handleClose, name, age, status, neededWork, image, 
                 <p className="tree-title">Work type</p>
                 <p className="tree-title">{neededWork}</p>
             </div>
-            <div className='centered_container'>
+            {isAuth ? <div className='centered_container'>
                 <Button variant="contained" color="error" onClick={onDelete} sx={{ alignSelf: 'center' }}>Delete</Button>
-            </div>
+            </div> : null}
+
         </Modal>
     )
 }

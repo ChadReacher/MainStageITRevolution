@@ -1,0 +1,134 @@
+body {
+    font-family: 'Lexend Deca';
+    background-color: #E5E5E5;
+
+
+}
+
+.container_register {
+    height: 100vh;
+    background: rgb(173,255,191);
+background: linear-gradient(90deg, rgba(173,255,191,1) 5%, rgba(170,251,104,1) 39%, rgba(80,236,113,1) 100%);
+}
+
+.button__in {
+    color: white;
+    font-family: 'Lexend Deca';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 14px;
+    background-color: #20DF7F;
+    text-decoration: none;
+    text-align: center;
+    border-radius: 13%;
+    margin-top: 10px;
+    position: absolute;
+    padding: 10px;
+    right: 0;
+    margin-right: 15px;
+}
+
+.form {
+    display: flex;
+    flex-direction: column;
+    width: 400px;
+    margin: 0 auto;
+}
+
+.form__title {
+    font-family: 'Lexend Deca';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 36px;
+    line-height: 30px;
+    text-align: center;
+    color: #224957;
+}
+
+.form__description {
+    margin-top: 10px;
+    margin-bottom: 15px;
+    font-family: 'Lexend Deca';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 20px;
+    /* identical to box height */
+
+    text-align: center;
+
+    color: #224957;
+}
+
+.form__button {
+    width: 100px;
+    height: 40px;
+    color: white;
+    font-family: 'Lexend Deca';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 14px;
+    background-color: #20DF7F;
+    text-decoration: none;
+    display: flex;
+    margin-top: 10px;
+    margin-left: auto;
+    margin-right: auto;
+    border-radius: 13%;
+    padding-top: 20px;
+    display: block;
+    text-align: center;
+}
+
+input {
+    margin-left: auto;
+    margin-right: auto;
+    padding-left: 10px;
+}
+
+input::placeholder {
+    color: white;
+    font-family: 'Lexend Deca';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 20px;
+}
+
+.email-field,
+.password-field,
+.name-field,
+.surname-field,
+.age-field,
+.gender-field {
+    min-height: 45px !important;
+    border: 0px;
+    margin-top: 20px;
+    background: #224957;
+    border-radius: 10px;
+    font-family: 'Lexend Deca';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 20px;
+    color: white;
+}
+
+.name-field,
+.surname-field {
+    width: 170px;
+}
+
+.row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.row > input {
+    margin-top: 0;
+}
+
+.submit_button {
+    margin: 20px auto 50px !important;
+}

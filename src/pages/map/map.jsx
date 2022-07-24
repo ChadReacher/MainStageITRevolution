@@ -29,6 +29,7 @@ import {
   fetchDeleteTree,
   selectIsTreeAdded,
 } from '../../store/map';
+import { selectIsAuth } from '../../store/auth'
 
 
 const schema = Yup.object({
@@ -52,6 +53,7 @@ const Map = () => {
   const trees = useSelector(selectAllTrees)
   const isTreeDeleted = useSelector(selectIsTreeDeleted)
   const isTreeAdded = useSelector(selectIsTreeAdded)
+  const isAuth = useSelector(selectIsAuth)
 
   const dispatch = useDispatch()
   useEffect(() => {
@@ -85,7 +87,7 @@ const Map = () => {
     dispatch(getBaseImage(e.target.files[0]));
   }
 
-  const onDeleteTree = (id) =>  {
+  const onDeleteTree = (id) => {
     setModalInfoOpen(false)
     dispatch(fetchDeleteTree(id));
   }
@@ -100,12 +102,15 @@ const Map = () => {
   const LocationFinder = () => {
     useMapEvent({
       click(e) {
-        setAddTreeModalOpen(true)
-        //e.latlng
-        setTreeLocation({
-          latitude: e.latlng?.lat,
-          longitude: e.latlng?.lng
-        });
+        if (isAuth) {
+          setAddTreeModalOpen(true)
+
+          //e.latlng
+          setTreeLocation({
+            latitude: e.latlng?.lat,
+            longitude: e.latlng?.lng
+          });
+        }
       },
     });
     return null;
@@ -133,10 +138,10 @@ const Map = () => {
             attribution='&amp;copy <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
             url="https://{s}.tile.osm.org/{z}/{x}/{y}.png"
           />
-          
+
           {trees?.map(item => {
             const isTreeTooBig = item.crownRadius > 20;
-            const radius = isTreeTooBig ? item.crownRadius: item.crownRadius * 3
+            const radius = isTreeTooBig ? item.crownRadius : item.crownRadius * 3
             return <Marker
               position={[item.latitude, item.longitude]}
               icon={L.icon({
@@ -165,6 +170,7 @@ const Map = () => {
         status={singleTree?.condition}
         crownRadius={singleTree?.crownRadius}
         neededWork={singleTree?.workType}
+        isAuth={isAuth}
         onDelete={() => onDeleteTree(singleTree?.registeredNumber)}
       />
 
@@ -174,10 +180,10 @@ const Map = () => {
           <input type="text" placeholder='Input tree type' className='form_input' {...register("type")} />
           <p className="tree-title">Age</p>
           <input type="text" placeholder='Input tree age' className='form_input' {...register("age")} />
-          {errors.age?.message ? <FormHelperText sx={{ color: 'red' }}>Age must be a number</FormHelperText>: null}
+          {errors.age?.message ? <FormHelperText sx={{ color: 'red' }}>Age must be a number</FormHelperText> : null}
           <p className="tree-title">Crown radius in (M)</p>
           <input type="text" placeholder='Input tree crown radius' className='form_input' {...register("crownRadius")} />
-         {errors.crownRadius?.message ? <FormHelperText sx={{ color: 'red' }}>Crown radius must be a number</FormHelperText>: null}
+          {errors.crownRadius?.message ? <FormHelperText sx={{ color: 'red' }}>Crown radius must be a number</FormHelperText> : null}
           <p className="tree-title">Condition</p>
           <input type="text" placeholder='Input tree status' className='form_input' {...register("condition")} />
           <p className="tree-title">Work type</p>
