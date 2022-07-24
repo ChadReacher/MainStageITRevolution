@@ -5,6 +5,7 @@ import com.warriors.treesproject.entity.Tree;
 import com.warriors.treesproject.service.ImageService;
 import com.warriors.treesproject.service.TreeService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -27,15 +28,20 @@ public class MainController {
     }
 
     @PostMapping("trees")
+    @PreAuthorize("hasAnyRole('ACTIVIST', 'ADMIN')")
     public Tree createNewTree(@RequestBody Tree tree) throws IOException {
-        System.out.println(tree);
         Image image = new Image(tree.getImage().getImageData());
         imageService.save(image);
         tree.setImage(image);
+        if (tree.getWorkType() == null) {
+            tree.setWorkType("null");
+        }
         treeService.save(tree);
         return tree;
     }
 
+
+    @PreAuthorize("hasAnyRole('ACTIVIST', 'ADMIN')")
     @PostMapping("/trees/{id}/delete")
     public void deleteTree(@PathVariable("id") Long id) {
         treeService.delete(id);
