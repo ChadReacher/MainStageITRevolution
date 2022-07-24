@@ -1,5 +1,6 @@
 package com.warriors.treesproject.security;
 
+import com.google.common.collect.Sets;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
 import java.util.Set;
@@ -7,8 +8,8 @@ import java.util.stream.Collectors;
 
 
 public enum Role {
-    ACTIVIST(Set.of(Permission.ACTIVIST_WRITE, Permission.ACTIVIST_READ)),
-    ADMIN(Set.of(Permission.ADMIN_WRITE, Permission.ADMIN_READ));
+    ACTIVIST(Sets.newHashSet(Permission.ACTIVIST_WRITE, Permission.ACTIVIST_READ)),
+    ADMIN(Sets.newHashSet(Permission.ADMIN_WRITE, Permission.ADMIN_READ));
 
     public Set<Permission> permissions;
 
