@@ -36,7 +36,6 @@ public class MainController {
     }
 
     @PostMapping("trees")
-    @PreAuthorize("hasAnyRole('ACTIVIST', 'ADMIN')")
     public Tree createNewTree(@RequestBody Tree tree) throws IOException {
         Image image = new Image(tree.getImage().getImageData());
         imageService.save(image);
@@ -67,7 +66,6 @@ public class MainController {
 
 
 
-    @PreAuthorize("hasAnyRole('ACTIVIST', 'ADMIN')")
     @PostMapping("/trees/{id}/delete")
     public void deleteTree(@PathVariable("id") Long id) {
         treeService.delete(id);
