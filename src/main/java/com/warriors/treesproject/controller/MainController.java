@@ -27,7 +27,7 @@ public class MainController {
     }
 
     @PostMapping("trees")
-    public Tree createNewTree(Tree tree) throws IOException {
+    public Tree createNewTree(@RequestBody Tree tree) throws IOException {
         System.out.println(tree);
         Image image = new Image(tree.getImage().getImageData());
         imageService.save(image);
