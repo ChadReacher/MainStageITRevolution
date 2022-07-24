@@ -9,6 +9,9 @@ const MAP_SLICE_NAME = 'map'
 
 const initialState = {
     trees: [],
+    neededWorkTrees: [],
+    healthyTrees: [],
+    removalTrees: [],
     loading: false,
     imageBase: '',
     isTreeDeleted: false,
@@ -50,6 +53,32 @@ export const fetchDeleteTree = createAsyncThunk(
     }
 );
 
+// Tree report 
+export const fetchNeededWorkTrees = createAsyncThunk(
+    `${MAP_SLICE_NAME}/fetch-needed-work-trees`,
+    async () => {
+        const response = await axios.get('https://mainstage-it-revolution.herokuapp.com/api/v1/trees?sort=work');
+        return response.data;
+    }
+);
+
+export const fetchHealthyTrees = createAsyncThunk(
+    `${MAP_SLICE_NAME}/fetch-healthy-tree`,
+    async () => {
+        const response = await axios.get('https://mainstage-it-revolution.herokuapp.com/api/v1/trees?sort=healthy');
+        return response.data;
+    }
+);
+
+export const fetchRemovalTrees = createAsyncThunk(
+    `${MAP_SLICE_NAME}/fetch-removal-tree`,
+    async () => {
+        const response = await axios.get('https://mainstage-it-revolution.herokuapp.com/api/v1/trees?sort=removal');
+        return response.data;
+    }
+);
+
+// File choosing
 export const getBaseImage = createAsyncThunk(
     `${MAP_SLICE_NAME}/get-image-get`,
     async (file) => {
@@ -113,6 +142,42 @@ export const mapSlice = createSlice({
             state.loading = false
             state.isTreeDeleted = true
         },
+        //fetchNeededWorkTrees
+        [fetchNeededWorkTrees.pending]: (state) => {
+            state.loading = true
+        },
+        [fetchNeededWorkTrees.rejected]: (state) => {
+            state.loading = false
+            state.error = true
+        },
+        [fetchNeededWorkTrees.fulfilled]: (state, action) => {
+            state.loading = false
+            state.neededWorkTrees = action.payload
+        },
+        // fetchRemovalTrees
+        [fetchRemovalTrees.pending]: (state) => {
+            state.loading = true
+        },
+        [fetchRemovalTrees.rejected]: (state) => {
+            state.loading = false
+            state.error = true
+        },
+        [fetchRemovalTrees.fulfilled]: (state, action) => {
+            state.loading = false
+            state.removalTrees = action.payload
+        },
+        //fetchHealthyTrees
+        [fetchHealthyTrees.pending]: (state) => {
+            state.loading = true
+        },
+        [fetchHealthyTrees.rejected]: (state) => {
+            state.loading = false
+            state.error = true
+        },
+        [fetchHealthyTrees.fulfilled]: (state, action) => {
+            state.loading = false
+            state.healthyTrees = action.payload
+        },
     },
 });
 
@@ -123,5 +188,8 @@ export const selectBaseImage = (state) => state.map.imageBase;
 export const selectIsTreeDeleted = (state) => state.map.isTreeDeleted;
 export const selectIsTreeAdded = (state) => state.map.isTreeAdded;
 
+export const selectNeededWorkTrees = (state) => state.map.neededWorkTrees;
+export const selectRemovalTrees = (state) => state.map.removalTrees;
+export const selectHealthyTrees = (state) => state.map.healthyTrees;
 // Reducer
 export const mapReducer = mapSlice.reducer;

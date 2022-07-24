@@ -133,6 +133,7 @@ const Map = () => {
             attribution='&amp;copy <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
             url="https://{s}.tile.osm.org/{z}/{x}/{y}.png"
           />
+          
           {trees?.map(item => {
             const isTreeTooBig = item.crownRadius > 20;
             const radius = isTreeTooBig ? item.crownRadius: item.crownRadius * 3
