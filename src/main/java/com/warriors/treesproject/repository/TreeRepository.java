@@ -10,19 +10,13 @@ import java.util.List;
 @Repository
 public interface TreeRepository extends JpaRepository<Tree, Long> {
 
-    @Query(value = "SELECT * FROM tree JOIN tree_work_types ON tree.registered_number = tree_work_types.registered_number\n" +
-            "JOIN tree_work_type ON tree_work_types.tree_work_type_id = tree_work_type.id\n" +
-            "WHERE tree_work_type.work_type = 'trimming' OR tree_work_type.work_type = 'treatment'", nativeQuery = true)
+    @Query(value = "SELECT * FROM tree WHERE work_type = 'treatment' OR work_type = 'trimming'", nativeQuery = true)
     List<Tree> findByWorkTypes();
 
-    @Query(value = "SELECT * FROM tree JOIN tree_work_types ON tree.registered_number = tree_work_types.registered_number\n" +
-            "JOIN tree_work_type ON tree_work_types.tree_work_type_id = tree_work_type.id\n" +
-            "WHERE tree_work_type.work_type = 'null'", nativeQuery = true)
+    @Query(value = "SELECT * FROM tree WHERE work_type ='null'", nativeQuery = true)
     List<Tree> findByTypeHealthy();
 
-    @Query(value = "SELECT * FROM tree JOIN tree_work_types ON tree.registered_number = tree_work_types.registered_number\n" +
-            "JOIN tree_work_type ON tree_work_types.tree_work_type_id = tree_work_type.id\n" +
-            "WHERE tree_work_type.work_type = 'removal'", nativeQuery = true)
+    @Query(value = "SELECT * FROM tree WHERE work_type ='removal'", nativeQuery = true)
     List<Tree> findByTypeRemoval();
 
 }
