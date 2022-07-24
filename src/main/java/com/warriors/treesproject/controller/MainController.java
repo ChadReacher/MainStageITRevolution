@@ -2,10 +2,16 @@ package com.warriors.treesproject.controller;
 
 import com.warriors.treesproject.entity.Image;
 import com.warriors.treesproject.entity.Tree;
+import com.warriors.treesproject.entity.User;
+import com.warriors.treesproject.security.Role;
 import com.warriors.treesproject.service.ImageService;
 import com.warriors.treesproject.service.TreeService;
+import com.warriors.treesproject.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -20,11 +26,13 @@ public class MainController {
 
     ImageService imageService;
     TreeService treeService;
+    UserService userService;
 
     @Autowired
-    public MainController(ImageService imageService, TreeService treeService) {
+    public MainController(ImageService imageService, TreeService treeService, UserService userService) {
         this.imageService = imageService;
         this.treeService = treeService;
+        this.userService = userService;
     }
 
     @PostMapping("trees")
@@ -39,6 +47,24 @@ public class MainController {
         treeService.save(tree);
         return tree;
     }
+
+
+    @PostMapping("auth")
+    public User registerNewUser(@RequestBody User user) {
+        userService.saveUser(user);
+        return user;
+    }
+
+    @GetMapping("/isAuthenticated")
+    public String isRegistered() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication instanceof AnonymousAuthenticationToken) {
+            return "{\"isAuth\":" + false + "}";
+        } else {
+            return "{\"isAuth\":" + true + "}";
+        }
+    }
+
 
 
     @PreAuthorize("hasAnyRole('ACTIVIST', 'ADMIN')")

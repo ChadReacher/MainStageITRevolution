@@ -56,8 +56,8 @@ public class CustomFilter extends AbstractAuthenticationProcessingFilter {
             userJSON = mapper.writeValueAsString(user);
         } catch (JsonProcessingException e) {
             e.printStackTrace();
-            response.getWriter().print(userJSON);
-            response.getWriter().flush();
         }
+        response.getWriter().print(userJSON);
+        response.getWriter().flush();
     }
 }
