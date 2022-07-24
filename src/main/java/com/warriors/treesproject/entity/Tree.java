@@ -1,9 +1,6 @@
 package com.warriors.treesproject.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
 import javax.persistence.*;
-import java.util.Set;
 
 @Entity
 public class Tree {
@@ -20,8 +17,8 @@ public class Tree {
     private Image image;
     private String workType;
 
-    private Double Latitude;
-    private Double Longitude;
+    private Double latitude;
+    private Double longitude;
 
     public Tree() {}
 
@@ -33,8 +30,8 @@ public class Tree {
         this.condition = condition;
         this.image = image;
         this.workType = workType;
-        Latitude = latitude;
-        Longitude = longitude;
+        this.latitude = latitude;
+        this.longitude = longitude;
     }
 
     public Tree(Long registeredNumber, Double crownRadius, Integer age, String type,
@@ -46,8 +43,8 @@ public class Tree {
         this.condition = condition;
         this.image = image;
         this.workType = workType;
-        Latitude = latitude;
-        Longitude = longitude;
+        this.latitude = latitude;
+        this.longitude = longitude;
     }
 
     public Long getRegisteredNumber() {
@@ -107,19 +104,19 @@ public class Tree {
     }
 
     public Double getLatitude() {
-        return Latitude;
+        return latitude;
     }
 
     public void setLatitude(Double latitude) {
-        Latitude = latitude;
+        this.latitude = latitude;
     }
 
     public Double getLongitude() {
-        return Longitude;
+        return longitude;
     }
 
     public void setLongitude(Double longitude) {
-        Longitude = longitude;
+        this.longitude = longitude;
     }
 
     @Override

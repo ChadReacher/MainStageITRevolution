@@ -1,12 +1,10 @@
 package com.warriors.treesproject.entity;
 
-import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
-@Entity
-public class TreeWorkType {
+/*public class TreeWorkType {
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
@@ -47,4 +45,4 @@ public class TreeWorkType {
                 ", workType='" + workType + '\'' +
                 '}';
     }
-}
+}*/

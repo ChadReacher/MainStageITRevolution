@@ -4,7 +4,6 @@ import com.warriors.treesproject.entity.Image;
 import com.warriors.treesproject.entity.Tree;
 import com.warriors.treesproject.service.ImageService;
 import com.warriors.treesproject.service.TreeService;
-import com.warriors.treesproject.service.TreeWorkTypeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -18,19 +17,18 @@ import java.util.*;
 @CrossOrigin(origins = "*")
 public class MainController {
 
-    TreeWorkTypeService treeWorkTypeService;
     ImageService imageService;
     TreeService treeService;
 
     @Autowired
-    public MainController(TreeWorkTypeService treeWorkTypeService, ImageService imageService, TreeService treeService) {
-        this.treeWorkTypeService = treeWorkTypeService;
+    public MainController(ImageService imageService, TreeService treeService) {
         this.imageService = imageService;
         this.treeService = treeService;
     }
 
     @PostMapping("trees")
     public Tree createNewTree(Tree tree) throws IOException {
+        System.out.println(tree);
         Image image = new Image(tree.getImage().getImageData());
         imageService.save(image);
         tree.setImage(image);

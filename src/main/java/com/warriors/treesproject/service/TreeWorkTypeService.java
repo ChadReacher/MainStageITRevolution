@@ -1,3 +1,4 @@
+/*
 package com.warriors.treesproject.service;
 
 
@@ -49,3 +50,4 @@ public class TreeWorkTypeService {
         repository.delete(treeWorkType);
     }
 }
+*/
