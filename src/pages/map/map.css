@@ -3,6 +3,7 @@
   height: 500px;
   z-index: 1;
 }
+
 .container {
     display: flex;
     align-items: center;
@@ -24,13 +25,14 @@
     align-items: center;
     justify-content: space-between;
     color: #08270E;
-    margin-bottom: 20px;
+    margin-bottom: 10px;
 }
 
 .tree-title {
     font-size: 18px;
     font-weight: 18px;
     font-family: 'Lexend', sans-serif;
+    margin: 5px 0 5px;
 }
 
 .avatar-container {
@@ -79,7 +81,6 @@ input[type="file"] {
     border: 1px solid #08270E;
     cursor: pointer;
     margin-top: 20px;
-    margin-bottom: 20px;
     padding: 5px;
 }
 
@@ -88,4 +89,11 @@ input[type="file"] {
     height: 30px;
     border-radius: 50%;
     margin-left: 10px;
+}
+
+.centered_container {
+    display: flex;
+    width: 100%;
+    align-items: center;
+    justify-content: center;
 }

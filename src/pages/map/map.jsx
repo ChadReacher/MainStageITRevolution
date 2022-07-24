@@ -5,6 +5,7 @@ import L from 'leaflet'
 // Components
 import { Modal, Loader } from '../../components'
 import { ModalInfo } from './components'
+import { FormControl, FormHelperText, Select, MenuItem } from '@mui/material'
 // Styles
 import './map.css'
 import { Button } from '@mui/material';
@@ -19,19 +20,24 @@ import {
 } from 'react-redux';
 import {
   selectLoading,
+  selectBaseImage,
+  selectAllTrees,
+  selectIsTreeDeleted,
   fetchAllTrees,
   getBaseImage,
-  selectBaseImage,
-  selectAllTrees
+  fetchAddTree,
+  fetchDeleteTree,
+  selectIsTreeAdded,
 } from '../../store/map';
 
 
 const schema = Yup.object({
-  name: Yup.string().required(),
-  age: Yup.string().required(),
+  type: Yup.string().required(),
+  age: Yup.number().required(),
+  crownRadius: Yup.number().required(),
   condition: Yup.string().required(),
   image: Yup.string().required(),
-  needs: Yup.string(),
+  workType: Yup.string().nullable(true).required(),
 }).required();
 
 const Map = () => {
@@ -44,16 +50,21 @@ const Map = () => {
   const isLoading = useSelector(selectLoading)
   const baseImage = useSelector(selectBaseImage)
   const trees = useSelector(selectAllTrees)
+  const isTreeDeleted = useSelector(selectIsTreeDeleted)
+  const isTreeAdded = useSelector(selectIsTreeAdded)
 
   const dispatch = useDispatch()
-
   useEffect(() => {
     dispatch(fetchAllTrees())
   }, [])
 
+  useEffect(() => {
+    dispatch(fetchAllTrees())
+  }, [isTreeDeleted, isTreeAdded])
+
   // Form
 
-  const { register, handleSubmit, formState: { isValid, isDirty } } = useForm({
+  const { register, handleSubmit, formState: { isValid, isDirty, errors } } = useForm({
     resolver: yupResolver(schema),
     mode: "onChange"
   });
@@ -61,12 +72,22 @@ const Map = () => {
   const onSubmit = (data, e) => {
     e.preventDefault();
     setAddTreeModalOpen(false)
-    console.log({ ...data, ...treeLocation, image: baseImage })
+    dispatch(fetchAddTree({
+      ...data,
+      ...treeLocation,
+      image: { imageData: baseImage },
+      workType: data.workType === 'None' ? null : data.workType
+    }))
   }
 
 
   const handleFileChange = (e) => {
     dispatch(getBaseImage(e.target.files[0]));
+  }
+
+  const onDeleteTree = (id) =>  {
+    setModalInfoOpen(false)
+    dispatch(fetchDeleteTree(id));
   }
 
   // Maps handlers
@@ -80,7 +101,11 @@ const Map = () => {
     useMapEvent({
       click(e) {
         setAddTreeModalOpen(true)
-        setTreeLocation(e.latlng);
+        //e.latlng
+        setTreeLocation({
+          latitude: e.latlng?.lat,
+          longitude: e.latlng?.lng
+        });
       },
     });
     return null;
@@ -109,11 +134,13 @@ const Map = () => {
             url="https://{s}.tile.osm.org/{z}/{x}/{y}.png"
           />
           {trees?.map(item => {
+            const isTreeTooBig = item.crownRadius > 20;
+            const radius = isTreeTooBig ? item.crownRadius: item.crownRadius * 3
             return <Marker
               position={[item.latitude, item.longitude]}
               icon={L.icon({
                 iconUrl: `data:image/jpeg;base64,${item.image.imageData}`,
-                iconSize: [item.crownRadius * 3, item.crownRadius * 3],
+                iconSize: [radius, radius],
                 className: 'marker'
               })}
               eventHandlers={{
@@ -135,26 +162,46 @@ const Map = () => {
         name={singleTree?.type}
         age={singleTree?.age}
         status={singleTree?.condition}
-        neededWork={'singleTree'}
+        crownRadius={singleTree?.crownRadius}
+        neededWork={singleTree?.workType}
+        onDelete={() => onDeleteTree(singleTree?.registeredNumber)}
       />
 
       <Modal isOpen={isAddTreeModalOpen} handleClose={() => setAddTreeModalOpen(false)}>
         <form className='form_container' onSubmit={handleSubmit(onSubmit)}>
-          <p className="tree-title">Name</p>
-          <input type="text" placeholder='Input tree name' className='form_input' {...register("name")} />
+          <p className="tree-title">Type</p>
+          <input type="text" placeholder='Input tree type' className='form_input' {...register("type")} />
           <p className="tree-title">Age</p>
           <input type="text" placeholder='Input tree age' className='form_input' {...register("age")} />
-          <p className="tree-title">Status</p>
+          {errors.age?.message ? <FormHelperText sx={{ color: 'red' }}>Age must be a number</FormHelperText>: null}
+          <p className="tree-title">Crown radius in (M)</p>
+          <input type="text" placeholder='Input tree crown radius' className='form_input' {...register("crownRadius")} />
+         {errors.crownRadius?.message ? <FormHelperText sx={{ color: 'red' }}>Crown radius must be a number</FormHelperText>: null}
+          <p className="tree-title">Condition</p>
           <input type="text" placeholder='Input tree status' className='form_input' {...register("condition")} />
-          <p className="tree-title">Needed work</p>
-          <input type="text" placeholder='Input tree needs' className='form_input' {...register("needs")} />
+          <p className="tree-title">Work type</p>
+          <FormControl variant="standard" sx={{ minWidth: '200px', mb: 1 }}>
+            <Select
+              labelId="demo-simple-select-standard-label"
+              id="demo-simple-select-standard"
+              label="Age"
+              {...register("workType")}
+            >
+              <MenuItem value={'None'}>
+                <em>None</em>
+              </MenuItem>
+              <MenuItem value={'treatment'}>treatment</MenuItem>
+              <MenuItem value={'trimming'}>trimming</MenuItem>
+              <MenuItem value={'removal'}>removal</MenuItem>
+            </Select>
+          </FormControl>
           <div className="row">
             <label className="tree-title file" for="inputTag">Select Image
               <input type="file" id="inputTag" placeholder='Input tree need' className='form_input' {...register("image")} onChange={handleFileChange} />
             </label>
             {baseImage ? <img src={`data:image/jpeg;base64,${baseImage}`} alt="chosen_image" className='chosen_image' /> : null}
           </div>
-          <Button variant="contained" color="success" type="submit" sx={{ marginTop: 2 }} disabled={!isDirty || !isValid}>Set tree</Button>
+          <Button variant="contained" color="success" type="submit" disabled={!isDirty || !isValid}>Set tree</Button>
         </form>
       </Modal>
     </div>
